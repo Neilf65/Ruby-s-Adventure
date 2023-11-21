@@ -20,6 +20,8 @@ public class HealthCollectible : MonoBehaviour
                 controller.ChangeHealth(1);
                 Destroy(gameObject);
 
+                Instantiate(HealthPickupVFX, transform.position, Quaternion.identity);
+
                 controller.PlaySound(collectedClip);
             }
         }

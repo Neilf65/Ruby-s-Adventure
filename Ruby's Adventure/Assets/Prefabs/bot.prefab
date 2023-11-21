@@ -178,6 +178,7 @@ MonoBehaviour:
   vertical: 0
   changeTime: 3
   smokeEffect: {fileID: 6884594127940479630}
+  HitVFX: {fileID: 3688451319320517732, guid: c376e3bad0eb4d7448553ca2353c9dd8, type: 3}
 --- !u!95 &1629567739045323239
 Animator:
   serializedVersion: 5

@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour
     int direction = 1;
 
     public ParticleSystem smokeEffect;
+    public ParticleSystem HitVFX;
 
     Animator animator;
 
@@ -78,6 +79,7 @@ public class EnemyController : MonoBehaviour
         if(player != null)
         {
             player.ChangeHealth(-1);
+
         }
     }
 
@@ -89,5 +91,6 @@ public class EnemyController : MonoBehaviour
 
         animator.SetTrigger("Fixed");
         smokeEffect.Stop();
+        Score.instance.AddPoints();
     }
 }

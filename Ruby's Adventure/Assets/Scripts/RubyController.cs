@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class RubyController : MonoBehaviour
 {
@@ -20,6 +22,7 @@ public class RubyController : MonoBehaviour
     Rigidbody2D rigidbody2d;
     float horizontal;
     float vertical;
+    bool canMove;
 
     Animator animator;
     Vector2 lookDirection = new Vector2(1,0);
@@ -28,6 +31,11 @@ public class RubyController : MonoBehaviour
 
     public AudioClip CogToss;
     public AudioClip DamageTaken;
+
+    public ParticleSystem HitVFX;
+
+    public MenuController menuController;
+
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +46,8 @@ public class RubyController : MonoBehaviour
         currentHealth = maxHealth;
 
         audioSource = GetComponent<AudioSource>();
+
+
     }
 
     // Update is called once per frame
@@ -47,6 +57,7 @@ public class RubyController : MonoBehaviour
         vertical = Input.GetAxis("Vertical");
 
         Vector2 move = new Vector2(horizontal, vertical);
+
 
         if(!Mathf.Approximately(move.x, 0.0f) || !Mathf.Approximately(move.y, 0.0f))
         {
@@ -82,6 +93,19 @@ public class RubyController : MonoBehaviour
                 }
             }
         }
+
+        if (currentHealth <= 0)
+        {
+            menuController.LoseGame();
+
+            speed = 0;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Restart();
+        }
+
     }
 
     // Set physics to update at fixed interval
@@ -94,18 +118,30 @@ public class RubyController : MonoBehaviour
         rigidbody2d.MovePosition(position);
     }
 
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        Debug.Log ("Collided");
+
+        HitVFX.Play();
+    }
+
     // Change Health when player game object collides with enemy game object
     public void ChangeHealth(int amount)
     {
         if (amount < 0)
         {
+
             if (isInvincible)
                 return;
+            Instantiate(HitVFX, transform.position, Quaternion.identity);
+            
 
             isInvincible = true;
             invincibleTimer = timeInvincible;
 
+            
             animator.SetTrigger("Hit");
+
 
             PlaySound(DamageTaken);
         }
@@ -126,8 +162,14 @@ public class RubyController : MonoBehaviour
         PlaySound(CogToss);
     }
 
+    //Initialize one shot for audio
     public void PlaySound(AudioClip clip)
     {
         audioSource.PlayOneShot(clip);
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

@@ -143,3 +143,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 033101af083e7ff48bde1b464aa4b2f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HitVFX: {fileID: 3688451319320517732, guid: c376e3bad0eb4d7448553ca2353c9dd8, type: 3}
