@@ -92,5 +92,6 @@ public class EnemyController : MonoBehaviour
         animator.SetTrigger("Fixed");
         smokeEffect.Stop();
         Score.instance.AddPoints();
+        GetComponent<EnemyShooting>().enabled = false;
     }
 }

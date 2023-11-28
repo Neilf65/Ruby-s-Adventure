@@ -8,15 +8,17 @@ public class MenuController : MonoBehaviour
 {
 
     public GameObject endPanel;
+    [SerializeField] private AudioClip LossFanfare;
 
-    int restartDelay = 3;
+    private AudioSource audioSource;
+
 
     bool gameHasEnded = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -31,11 +33,16 @@ public class MenuController : MonoBehaviour
         endPanel.SetActive(true);
         endPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Game Over! Press R to restart!";
 
+        PlaySound(LossFanfare); 
+                    
+
         if (gameHasEnded == false)
         {
             gameHasEnded = true;
-            Invoke("Restart", restartDelay);
+
+
         }
+ 
     }
 
     //Call when score reaches 5
@@ -46,5 +53,10 @@ public class MenuController : MonoBehaviour
         endPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "You Win! Press R to restart!";
         
 
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
     }
 }
