@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class RubyController : MonoBehaviour
 {
     public float speed = 3.0f;
-
     public int maxHealth = 5;
     public float timeInvincible = 2.0f;
 
@@ -15,9 +14,11 @@ public class RubyController : MonoBehaviour
     public int health { get { return currentHealth; }}
 
     public GameObject projectilePrefab;
-
+    private int extraHits= 0;
+    private SpriteRenderer spriteRenderer;
     bool isInvincible;
     float invincibleTimer;
+    
 
     Rigidbody2D rigidbody2d;
     float horizontal;
@@ -32,6 +33,10 @@ public class RubyController : MonoBehaviour
     public AudioClip CogToss;
     public AudioClip DamageTaken;
     public AudioClip SkeletonDeath;
+    
+    
+    private AudioSource audiosource;
+    public AudioClip BackgroundMusic;
 
     public ParticleSystem HitVFX;
 
@@ -45,8 +50,10 @@ public class RubyController : MonoBehaviour
         rigidbody2d = GetComponent<Rigidbody2D>();
 
         currentHealth = maxHealth;
-
         audioSource = GetComponent<AudioSource>();
+        audioSource.PlayOneShot(BackgroundMusic);
+
+       
 
 
     }
@@ -112,6 +119,7 @@ public class RubyController : MonoBehaviour
         if (currentHealth <= 0)
         {
             menuController.LoseGame();
+            
 
             speed = 0;
         }
@@ -121,6 +129,28 @@ public class RubyController : MonoBehaviour
             Restart();
         }
 
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            extraHits++;
+            speed= 5;
+            
+            
+        }
+    }
+    public void OnPlayerHit()
+    {
+        if (extraHits > 0)
+        {
+            // Decrease the extra hits
+            extraHits--;
+                
+            spriteRenderer.color = Color.white;
+
+                
+        }
     }
 
     // Set physics to update at fixed interval
@@ -149,6 +179,9 @@ public class RubyController : MonoBehaviour
             if (isInvincible)
                 return;
             Instantiate(HitVFX, transform.position, Quaternion.identity);
+            if(extraHits>0)
+                return;
+            
             
 
             isInvincible = true;
@@ -187,4 +220,5 @@ public class RubyController : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+    
 }
